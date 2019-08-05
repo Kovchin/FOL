@@ -12,6 +12,7 @@
 <body>
 	<header>
 		<p class='logo'>ОТС Сибири Droid</p>
+		<p>Привет</p>
 	</header>
 	<aside>
 
