@@ -12,6 +12,7 @@
 <body>
 	<header>
 		<p class='logo'>ОТС Сибири Droid</p>
+		<h2>Привет Макар</h2>
 	</header>
 	<aside>
 
@@ -52,7 +53,7 @@
             <td>
             ' . $CRQ . '
             </td>
-            <td><a href="detail.php?crq='.$CRQ.'">
+            <td><a href="detail.php?crq=' . $CRQ . '">
 			' . $name . '
 			</a>
             </td>
