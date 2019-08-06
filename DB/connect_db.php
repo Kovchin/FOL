@@ -18,7 +18,7 @@ class MyDB
     private $email_master;     //Почта инициатора работ
     private $phone_master;     //Телефон инициатора работ
     //База fol_worcing_process
-    private $
+    //
     //конструктор класса инициализирует все методы
 
     public function __construct()
