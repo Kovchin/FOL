@@ -44,7 +44,7 @@ function show_select_option_def($sql, $pole, $selected_record)
 {
     $db = connect();
     $result = mysqli_query($db, $sql);
-    echo '<select>';
+    echo '<select name="counterparty">';
     while ($row = mysqli_fetch_assoc($result)) {
         if ($row[$pole] == $selected_record)
             echo '<option selected>' . $row[$pole] . '</option>';
@@ -52,4 +52,31 @@ function show_select_option_def($sql, $pole, $selected_record)
             echo '<option> ' . $row[$pole] . ' </option>';
     }
     echo '</select>';
+}
+
+function show_counerparty()
+{
+    echo '<table><tr>';
+    echo '<td>Инициатор работ: </td>';
+    $check = $_REQUEST['counterparty'];
+    echo '<td>' . show_select_option_def("SELECT `name` FROM `fol_counterparty`", "name", $check) . '</td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td>email: </td>';
+    echo '<td>mmm</td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td>phone: </td>';
+    echo '<td>ppp</td>';
+    echo '</tr>';
+    echo '</table>';
+}
+
+//Вернуть id таблицы $table по полю $pole_name со значением $value
+
+function get_idByName($table, $pole_name, $value)
+{
+    $db = connect();
+    $temp = mysqli_query($db, "SELECT * FROM `$table` WHERE `$pole_name` = '$value'");
+    return  mysqli_fetch_assoc($temp)['id'];
 }

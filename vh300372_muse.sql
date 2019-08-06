@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 05 2019 г., 18:06
+-- Время создания: Авг 06 2019 г., 14:46
 -- Версия сервера: 8.0.12
 -- Версия PHP: 7.2.10
 
@@ -991,9 +991,11 @@ INSERT INTO `fol_counterparty` (`id`, `name`, `email`, `phone`) VALUES
 CREATE TABLE `fol_list` (
   `id` int(11) NOT NULL,
   `CRQ` int(11) NOT NULL,
+  `ASU` int(11) NOT NULL,
   `name` text NOT NULL,
   `compleate` tinyint(1) NOT NULL,
   `agreed` tinyint(1) NOT NULL,
+  `canceled` tinyint(4) NOT NULL,
   `date_of_work` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1001,12 +1003,26 @@ CREATE TABLE `fol_list` (
 -- Дамп данных таблицы `fol_list`
 --
 
-INSERT INTO `fol_list` (`id`, `CRQ`, `name`, `compleate`, `agreed`, `date_of_work`) VALUES
-(1, 123321, 'Тестовое поле', 0, 1, '2019-07-31'),
-(2, 767, 'Вставленное значение вместо удаленного', 0, 0, '2019-07-25'),
-(3, 321321, 'Второе значение', 0, 0, '2019-07-30'),
-(4, 32132, 'Четвертое значение', 1, 0, '2019-07-28'),
-(5, 9999999, 'Устранение порыва оптики на участке Пелеуй НПС 9', 1, 0, '2019-08-06');
+INSERT INTO `fol_list` (`id`, `CRQ`, `ASU`, `name`, `compleate`, `agreed`, `canceled`, `date_of_work`) VALUES
+(1, 123321, 0, 'Тестовое поле', 0, 1, 0, '2019-07-31'),
+(2, 767, 0, 'Вставленное значение вместо удаленного', 0, 0, 0, '2019-07-25'),
+(3, 321321, 0, 'Второе значение', 0, 0, 0, '2019-07-30'),
+(4, 32132, 0, 'Четвертое значение', 1, 0, 0, '2019-07-28'),
+(5, 9999999, 0, 'Устранение порыва оптики на участке Пелеуй НПС 9', 1, 0, 0, '2019-08-06');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `fol_working_process`
+--
+
+CREATE TABLE `fol_working_process` (
+  `id` int(11) NOT NULL,
+  `id_crq` int(11) NOT NULL,
+  `id_counterparty` int(11) NOT NULL,
+  `flag` smallint(2) NOT NULL,
+  `data` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2174,6 +2190,12 @@ ALTER TABLE `fol_list`
   ADD UNIQUE KEY `CRQ` (`CRQ`);
 
 --
+-- Индексы таблицы `fol_working_process`
+--
+ALTER TABLE `fol_working_process`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `log`
 --
 ALTER TABLE `log`
@@ -2225,6 +2247,12 @@ ALTER TABLE `fol_counterparty`
 --
 ALTER TABLE `fol_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT для таблицы `fol_working_process`
+--
+ALTER TABLE `fol_working_process`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `log`

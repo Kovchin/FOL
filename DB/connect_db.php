@@ -7,11 +7,18 @@ require_once 'DBRegistrationData.php';
 class MyDB
 {
     private $connect;       //соединение с БД
+    //База fol_list
     private $crq;           //номер CRQ
     private $crq_value;     //название CRQ
     private $AllOpenCRQ;    //все открытые CRQ
     private $date_of_work;  //дата проведения работ
-
+    //База fol_counterparty
+    private $id_master;     //ID инициатора работ
+    private $name_master;     //Имя инициатора работ
+    private $email_master;     //Почта инициатора работ
+    private $phone_master;     //Телефон инициатора работ
+    //База fol_worcing_process
+    private $
     //конструктор класса инициализирует все методы
 
     public function __construct()

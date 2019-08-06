@@ -25,25 +25,14 @@ $db = new MyDB();
 		<input name="load" type="submit" value="Загрузить CRQ">
 		<input name="add" type="submit" value="Добавить CRQ">
 		<input name="update" type="submit" value="Обновить CRQ">
-	</form>
-	<hr>
-	<form action="">
+		<!-- </form>-->
+		<hr>
+		<!-- <form action="#" method="get">-->
 		<a href="pages\add_counterparty.php">Добавить контрагента</a>
-		<table>
-			<tr>
-				<td>Инициатор работ: </td>
-				<td><?php show_select_option_def('SELECT `name` FROM `fol_counterparty`', 'name', 'МТС'); ?></td>
-			</tr>
-			<tr>
-				<td>email: </td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>phone: </td>
-				<td></td>
-			</tr>
-		</table>
-		<input type="submit" value="Выбрать инициатора">
+		<?php
+		show_counerparty();
+		echo get_idByName('fol_counterparty', 'name', $_REQUEST['counterparty']);
+		?>
 	</form>
 	<hr>
 	<form action="#" method="post">
