@@ -8,6 +8,7 @@ class MyDB
 {
     private $connect;       //соединение с БД
     //База fol_list
+    private $id_crq;        //id CRQ
     private $crq;           //номер CRQ
     private $crq_value;     //название CRQ
     private $AllOpenCRQ;    //все открытые CRQ
@@ -17,6 +18,17 @@ class MyDB
     private $name_master;     //Имя инициатора работ
     private $email_master;     //Почта инициатора работ
     private $phone_master;     //Телефон инициатора работ
+    /*
+    Поле flag таблицы fol_working_process
+    1- инициатор
+    2- Согласование ТК
+    3- Согласование заявки ВОЛС
+    4- Рассылка на всех
+    5- Отправлена на доработку
+    6- Вариант согласован
+    7- Информирование об отмене
+    */
+
     //База fol_worcing_process
     //
     //конструктор класса инициализирует все методы
@@ -37,18 +49,26 @@ class MyDB
     }
 
     //инициализация свойств класса
-
     private function initialization_of_class_methods($crq)
     {
+        /*==================================
+Формирование полей из базы fol_list
+==================================*/
         $temp = mysqli_query($this->connect, "SELECT * FROM `fol_list`");
         while ($record = mysqli_fetch_assoc($temp)) {
             if ($record['CRQ'] == $crq) {
+                $this->id_crq = $record['id'];
                 $this->crq = $record['CRQ'];
                 $this->crq_value = $record['name'];
                 $this->date_of_work = $record['date_of_work'];
             }
         }
         $this->AllOpenCRQ = mysqli_query($this->connect, "SELECT `CRQ` FROM `fol_list` WHERE `compleate` = 0");
+        /*==================================
+Формирование полей из базы fol_working_process
+==================================*/
+        $work_process = mysqli_query($this->connect, "SELECT * FROM `fol_working_process` WHERE `id_crq` = $this->id_crq");
+        $this->show_rows($work_process);
     }
 
     //=======================

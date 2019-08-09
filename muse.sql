@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 06 2019 г., 14:46
+-- Время создания: Авг 09 2019 г., 16:38
 -- Версия сервера: 8.0.12
 -- Версия PHP: 7.2.10
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `vh300372_muse`
+-- База данных: `muse`
 --
 
 -- --------------------------------------------------------
@@ -1023,6 +1023,19 @@ CREATE TABLE `fol_working_process` (
   `flag` smallint(2) NOT NULL,
   `data` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `fol_working_process`
+--
+
+INSERT INTO `fol_working_process` (`id`, `id_crq`, `id_counterparty`, `flag`, `data`) VALUES
+(1, 2, 1, 1, '2019-08-09'),
+(2, 2, 1, 2, '2019-08-01'),
+(3, 2, 2, 2, '2019-08-02'),
+(4, 2, 1, 3, '2019-07-23'),
+(5, 2, 2, 3, '2019-07-02'),
+(6, 2, 3, 3, '2019-07-17'),
+(7, 1, 1, 1, '2019-08-05');
 
 -- --------------------------------------------------------
 
@@ -2252,7 +2265,7 @@ ALTER TABLE `fol_list`
 -- AUTO_INCREMENT для таблицы `fol_working_process`
 --
 ALTER TABLE `fol_working_process`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `log`
