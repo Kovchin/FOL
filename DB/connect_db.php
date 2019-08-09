@@ -6,31 +6,31 @@ require_once 'DBRegistrationData.php';
 
 class MyDB
 {
-    private $connect;       //соединение с БД
-    //База fol_list
-    private $id_crq;        //id CRQ
-    private $crq;           //номер CRQ
-    private $crq_value;     //название CRQ
-    private $AllOpenCRQ;    //все открытые CRQ
-    private $date_of_work;  //дата проведения работ
-    //База fol_counterparty
-    private $id_master;     //ID инициатора работ
-    private $name_master;     //Имя инициатора работ
-    private $email_master;     //Почта инициатора работ
-    private $phone_master;     //Телефон инициатора работ
+    private $arr_counterparty;          //Массив организаций arr[id][name|email|phone] формируется из таблицы fol_counterparty
+    private $arr_system_flag;           //Массив состояния хода работ берется из таблицы fol_system_flag
     /*
-    Поле flag таблицы fol_working_process
-    1- инициатор
-    2- Согласование ТК
-    3- Согласование заявки ВОЛС
-    4- Рассылка на всех
-    5- Отправлена на доработку
-    6- Вариант согласован
-    7- Информирование об отмене
+    Поле flag таблицы fol_working_process от этого флага зависит логика парсинга массива $arr_work
+    1 - Инициатор
+    2 - Согласование ТК
+    3 - Согласование заявки ВОЛС
+    4 - Рассылка на всех
+    5 - Отправлена на доработку
+    6 - Вариант согласован
+    7 - Информирование об отмене
     */
+    private $connect;                   //соединение с БД
+    //База fol_list     
+    private $id_crq;                    //id CRQ
+    private $crq;                       //номер CRQ
+    private $crq_value;                 //название CRQ
+    private $date_of_work;              //дата проведения работ
+    //*
+    private $AllOpenCRQ;                //Имена всех открытыx CRQ
+    //База fol_counterparty по номеру CRQ     
+    private $arr_work;                  //Массив хода работ по номеру CRQ 
 
     //База fol_worcing_process
-    //
+
     //конструктор класса инициализирует все методы
 
     public function __construct()
@@ -52,8 +52,8 @@ class MyDB
     private function initialization_of_class_methods($crq)
     {
         /*==================================
-Формирование полей из базы fol_list
-==================================*/
+        Формирование полей из базы fol_list
+        ==================================*/
         $temp = mysqli_query($this->connect, "SELECT * FROM `fol_list`");
         while ($record = mysqli_fetch_assoc($temp)) {
             if ($record['CRQ'] == $crq) {
@@ -65,12 +65,36 @@ class MyDB
         }
         $this->AllOpenCRQ = mysqli_query($this->connect, "SELECT `CRQ` FROM `fol_list` WHERE `compleate` = 0");
         /*==================================
-Формирование полей из базы fol_working_process
-==================================*/
-        $work_process = mysqli_query($this->connect, "SELECT * FROM `fol_working_process` WHERE `id_crq` = $this->id_crq");
-        $this->show_rows($work_process);
+        Формирование массива из базы fol_counterparty
+        ==================================*/
+        $temp = mysqli_query($this->connect, "SELECT * FROM `fol_counterparty`");
+        while ($record = mysqli_fetch_assoc($temp)) {
+            $this->arr_counterparty[$record['id']] = array(
+                'name' => $record['name'],
+                'email' => $record['email'],
+                'phone' => $record['phone']
+            );
+        }
+        /*==================================
+        Формирование массива из таблицы fol_system_flag
+        ==================================*/
+        $temp = mysqli_query($this->connect, "SELECT * FROM `fol_system_flag`");
+        while ($record = mysqli_fetch_assoc($temp)) {
+            $this->arr_system_flag[$record['id']] = $record['name'];
+        }
+        /*==================================
+        Формирование полей из базы fol_working_process
+        ==================================*/
+        $temp = mysqli_query($this->connect, "SELECT * FROM `fol_working_process` WHERE `id_crq` = $this->id_crq");
+        while ($record = mysqli_fetch_assoc($temp))
+        {
+                $this->arr_work[$this->arr_system_flag[$record['flag']]][] = array(
+                    'id' => $record['id'],
+                    'id_counterparty' => $record['id_counterparty'],
+                    'data' => $record['data']
+                );
+            }
     }
-
     //=======================
     //отображает все элементы массива что возвращает команда query
     //=======================

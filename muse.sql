@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 09 2019 г., 16:38
--- Версия сервера: 8.0.12
--- Версия PHP: 7.2.10
+-- Время создания: Авг 09 2019 г., 20:51
+-- Версия сервера: 8.0.15
+-- Версия PHP: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -979,6 +979,7 @@ INSERT INTO `fol_counterparty` (`id`, `name`, `email`, `phone`) VALUES
 (2, 'BeeLine', 'test@test.ru', '+77777777777'),
 (3, 'test', 'test@mail.ru', '+7888888888'),
 (4, '123', 'test@test.ru', '123'),
+(5, 'Наташа', 'kovchina@mail.ru', '+79233093999'),
 (12, '1', 'test@test.ru', '2'),
 (41, 'Ира', 'ira@ira.ru', '777');
 
@@ -1009,6 +1010,30 @@ INSERT INTO `fol_list` (`id`, `CRQ`, `ASU`, `name`, `compleate`, `agreed`, `canc
 (3, 321321, 0, 'Второе значение', 0, 0, 0, '2019-07-30'),
 (4, 32132, 0, 'Четвертое значение', 1, 0, 0, '2019-07-28'),
 (5, 9999999, 0, 'Устранение порыва оптики на участке Пелеуй НПС 9', 1, 0, 0, '2019-08-06');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `fol_system_flag`
+--
+
+CREATE TABLE `fol_system_flag` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `fol_system_flag`
+--
+
+INSERT INTO `fol_system_flag` (`id`, `name`) VALUES
+(6, 'Вариант согласован'),
+(1, 'Инициатор'),
+(7, 'Информирование об отмене'),
+(5, 'Отправлена на доработку'),
+(4, 'Рассылка на всех'),
+(3, 'Согласование заявки ВОЛС'),
+(2, 'Согласование_ТК');
 
 -- --------------------------------------------------------
 
@@ -2203,6 +2228,13 @@ ALTER TABLE `fol_list`
   ADD UNIQUE KEY `CRQ` (`CRQ`);
 
 --
+-- Индексы таблицы `fol_system_flag`
+--
+ALTER TABLE `fol_system_flag`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
 -- Индексы таблицы `fol_working_process`
 --
 ALTER TABLE `fol_working_process`
@@ -2253,13 +2285,19 @@ ALTER TABLE `erg`
 -- AUTO_INCREMENT для таблицы `fol_counterparty`
 --
 ALTER TABLE `fol_counterparty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT для таблицы `fol_list`
 --
 ALTER TABLE `fol_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT для таблицы `fol_system_flag`
+--
+ALTER TABLE `fol_system_flag`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `fol_working_process`
