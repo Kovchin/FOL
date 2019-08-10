@@ -6,8 +6,12 @@ require_once 'DBRegistrationData.php';
 
 class MyDB
 {
+    private $connect;                   //соединение с БД\
+
     private $arr_counterparty;          //Массив организаций arr[id][name|email|phone] формируется из таблицы fol_counterparty
-    private $arr_system_flag;           //Массив состояния хода работ берется из таблицы fol_system_flag
+    private $arr_system_flag;           //Массив состояния хода работ берется из таблицы fol_system_flag arr[name] (номер элемента массива это id)
+    private $arr_All_Open_CRQ;          //Массив всех открытых инцидентов
+    private $arr_work;                  //Массив хода работ по номеру CRQ 
     /*
     Поле flag таблицы fol_working_process от этого флага зависит логика парсинга массива $arr_work
     1 - Инициатор
@@ -18,18 +22,11 @@ class MyDB
     6 - Вариант согласован
     7 - Информирование об отмене
     */
-    private $connect;                   //соединение с БД
     //База fol_list     
     private $id_crq;                    //id CRQ
     private $crq;                       //номер CRQ
     private $crq_value;                 //название CRQ
     private $date_of_work;              //дата проведения работ
-    //*
-    private $AllOpenCRQ;                //Имена всех открытыx CRQ
-    //База fol_counterparty по номеру CRQ     
-    private $arr_work;                  //Массив хода работ по номеру CRQ 
-
-    //База fol_worcing_process
 
     //конструктор класса инициализирует все методы
 
@@ -65,6 +62,13 @@ class MyDB
         }
         $this->AllOpenCRQ = mysqli_query($this->connect, "SELECT `CRQ` FROM `fol_list` WHERE `compleate` = 0");
         /*==================================
+        //Формирование массива всх открытых инцидентов
+        ==================================*/
+        $temp = mysqli_query($this->connect, "SELECT `CRQ` FROM `fol_list` WHERE `compleate` = 0");
+        while ($record = mysqli_fetch_assoc($temp)) {
+            $this->arr_All_Open_CRQ[] = $record['CRQ'];
+        }
+        /*==================================
         Формирование массива из базы fol_counterparty
         ==================================*/
         $temp = mysqli_query($this->connect, "SELECT * FROM `fol_counterparty`");
@@ -85,18 +89,56 @@ class MyDB
         /*==================================
         Формирование полей из базы fol_working_process
         ==================================*/
-        $temp = mysqli_query($this->connect, "SELECT * FROM `fol_working_process` WHERE `id_crq` = $this->id_crq");
-        while ($record = mysqli_fetch_assoc($temp))
-        {
+        if (isset($_REQUEST['CRQ'])){
+
+            $temp = mysqli_query($this->connect, "SELECT * FROM `fol_working_process` WHERE `id_crq` = $this->id_crq");
+            while ($record = mysqli_fetch_assoc($temp)) {
                 $this->arr_work[$this->arr_system_flag[$record['flag']]][] = array(
                     'id' => $record['id'],
                     'id_counterparty' => $record['id_counterparty'],
                     'data' => $record['data']
                 );
             }
+        }
     }
+
+    /*==================================
+    Метод выводящий все свойства класса (для отладки)
+    ==================================*/
+
+    public function show_all_method_Class_DB()
+    {
+
+        echo '<hr> <h1> Действующие методы класса DB <hr>';
+        echo '<h2>Массив $arr_counterparty</h2>';
+        $this->show_arr($this->arr_counterparty);
+        echo '<h2>Массив $arr_system_flag</h2>';
+        $this->show_arr($this->arr_system_flag);
+        echo '<h2>Массив $arr_work</h2>';
+        $this->show_arr($this->arr_work);
+        echo '<h2>Массив $arr_All_Open_CRQ</h2>';
+        $this->show_arr($this->arr_All_Open_CRQ);
+        if (isset($_REQUEST['CRQ'])){
+        echo '<br /> <b>id_crq</b> = ' . $this->id_crq . '<br />';
+        echo '<br /> <b>crq</b> = ' . $this->crq . '<br />';
+        echo '<br /> <b>crq_name</b> = ' . $this->crq_value . '<br />';
+        echo '<br /> <b>date_of_work</b> = ' . $this->date_of_work . '<br />';
+        }
+        echo '<hr>';
+    }
+    /*==================================
+    Метод выводит на экран массив (для отладки)
+    ==================================*/
+
+    private function show_arr($arr)
+    {
+        echo '<pre>';
+        print_r($arr);
+        echo '</pre>';
+    }
+
     //=======================
-    //отображает все элементы массива что возвращает команда query
+    //отображает все элементы массива что возвращает команда query (для отладки)
     //=======================
 
     private function show_rows($rows)
@@ -147,26 +189,25 @@ class MyDB
     <?php
     }
 
-    //Функция запрашивает все открытые CRQ и выводит этот список в виде ниспадающего списка
+    //Метод запрашивает все открытые CRQ и выводит этот список в виде ниспадающего списка оставля фокус на текущем открытом CRQ
 
     private function show_AllOpenCRQ()
     {
-        if (isset($_REQUEST['crq'])) {
+        if (isset($_REQUEST['crq'])){
             echo '<select name="crq">';
-            while ($crq = mysqli_fetch_assoc($this->AllOpenCRQ)) {
-                if ($crq['CRQ'] == $this->crq)
-                    echo '<option selected>' . $crq['CRQ'] . '</option>';
-                else {
-                    echo '<option>' . $crq['CRQ'] . '</option>';
-                }
+            for ($i=0; $i < count($this->arr_All_Open_CRQ);$i++){
+                if ($this->arr_All_Open_CRQ[$i] == $this->crq)
+                echo '<option selected>'.$this->arr_All_Open_CRQ[$i].'</option>';
+                else 
+                    echo '<option>' . $this->arr_All_Open_CRQ[$i] . '</option>';
             }
             echo '</select>';
-        } else {
-            echo '<input type="text" name="crq" placeholder="Номер CRQ">';
         }
+        else 
+            echo '<input type="text" name="crq" placeholder="Номер CRQ">';
     }
 
-    //показывает дату проведения работ
+    //Метод выводит дату проведения работ
 
     private function show_date_of_work()
     {

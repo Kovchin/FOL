@@ -4,6 +4,7 @@ require_once 'php/add_counterparty.php';
 require_once 'Db/DBRegistrationData.php';
 
 $db = new MyDB();
+//$db->show_all_method_Class_DB(); - показывает все свойства класса
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +29,7 @@ $db = new MyDB();
 		<!-- </form>-->
 		<hr>
 		<!-- <form action="#" method="get">-->
-		<a href="pages\add_counterparty.php">Добавить контрагента</a>
+		<p><a href="pages\add_counterparty.php">Добавить контрагента</a></p>
 		<?php
 		show_counerparty();
 		echo get_idByName('fol_counterparty', 'name', $_REQUEST['counterparty']);

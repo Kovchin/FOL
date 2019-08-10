@@ -1,8 +1,5 @@
 <?php
 
-//require_once 'check.php';
-//require_once '../DB/DBRegistrationData.php';
-
 $name = $_REQUEST['name'];
 $email = $_REQUEST['email'];
 $phone = $_REQUEST['phone'];
@@ -56,10 +53,10 @@ function show_select_option_def($sql, $pole, $selected_record)
 
 function show_counerparty()
 {
-    echo '<table><tr>';
+    echo '<table>';
+    echo '<tr>';
     echo '<td>Инициатор работ: </td>';
-    $check = $_REQUEST['counterparty'];
-    echo '<td>' . show_select_option_def("SELECT `name` FROM `fol_counterparty`", "name", $check) . '</td>';
+    echo '<td>' . show_select_option_def("SELECT `name` FROM `fol_counterparty`", "name", $_REQUEST['counterparty']) . ' </td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td>email: </td>';
